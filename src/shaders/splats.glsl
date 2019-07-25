@@ -51,6 +51,7 @@ uniform float radius;
 #endif
 
 out vec2 gsQuadCoords;
+out float gsLight;
 
 uniform mat4 modelview;
 uniform mat4 projection;
@@ -78,15 +79,17 @@ bool out_of_frustum(vec4 p)
 
 void main(void)
 {
-    #ifdef COLOR_PER_SPLAT
-    gsColor = vColor[0];
-    #endif
-
     vec3 p = vec3(modelview * vec4(vCenter[0], 1));
     vec3 n = mat3(modelview) * vNormal[0];
     vec3 r = normalize(perpendicular(n));
     //vec3 r = normalize(cross(n, vec3(0,1,0)));
     vec3 u = cross(n, r);
+
+    gsLight = 0.8 * abs(dot(n, normalize(p))) + 0.2;
+
+    #ifdef COLOR_PER_SPLAT
+    gsColor = vColor[0];
+    #endif
 
     r = radius * normalize(r);
     u = radius * normalize(u);
@@ -124,12 +127,13 @@ uniform vec3 color;
 const vec3 gsColor = color;
 #endif
 in vec2 gsQuadCoords;
+in float gsLight;
 
 out vec4 outColor;
 void main() {
     if (dot(gsQuadCoords, gsQuadCoords) > 1) discard;
 
-    vec3 col = gsColor; //.bgr / 255;
+    vec3 col = gsColor * gsLight;
 
     outColor = vec4(col, 1.0);
 }

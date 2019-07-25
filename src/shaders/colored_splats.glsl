@@ -56,7 +56,7 @@ bool out_of_frustum(vec4 p)
 void main(void)
 {
     // pass color
-    gsColor = vColor[0];
+    gsColor = vec3(1.0); // n.z * (vColor[0] + vec3(0.05));
 
     vec3 p = vec3(modelview * vec4(vCenter[0], 1));
     vec3 n = mat3(modelview) * vNormal[0];

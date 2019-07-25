@@ -1,12 +1,14 @@
 function createContext()
     GLFW.Init()
 
+    GLFW.WindowHint(GLFW.DEPTH_BITS, 8)
     window = GLFW.CreateWindow(1920, 1080, "Shiny.jl")
     GLFW.ShowWindow(window)
     GLFW.MakeContextCurrent(window)
     GLAbstraction.switch_context!(window)
     glEnable(GL_PROGRAM_POINT_SIZE)
     GLFW.SwapInterval(-1)
+    GLFW.HideWindow(window)
 
     window
 end
@@ -36,7 +38,7 @@ function show(scene::Group, camera::AbstractCamera, window::GLFW.Window; rate = 
         GLFW.SwapBuffers(window)
         frames += 1
 
-        sleep(max(0.001, rate - 1.5 * (time() - framestart)))
+        sleep(max(0.001, rate - 0.001 - time() - framestart))
 
         now = time()
         if now - lastprint > 1
