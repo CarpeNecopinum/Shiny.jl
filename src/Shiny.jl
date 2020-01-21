@@ -36,4 +36,7 @@ module Shiny
         using ModernGL
         include("primitives.jl")
     end
+
+    # Workaround for https://github.com/JuliaPlots/AbstractPlotting.jl/issues/250
+    Base.convert(::Type{Node{T}}, x) where {T} = Node{T}(x)
 end
